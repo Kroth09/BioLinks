@@ -2,18 +2,19 @@
 
 namespace App\Http\Requests;
 
-use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
+use App\Models\User;
 
-/**
- * Handle login request
+
+
+/*
+ * @property-read string $name
  * @property-read string $email
  * @property-read string $password
  */
-
-class LoginRequest extends FormRequest
+class RegisterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,28 +32,27 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email'],
-            'password' => ['required'],
+            'name' => ['required', 'string'],
+            'email' => ['required', 'email','confirmed', 'unique:users',],
+            'password' => ['required',
+                Password::defaults()],
         ];
     }
 
-    /*
-     * attempt to login in the system
-     */
-    public function attempt(): bool{
+    public function tryToRegister()
+    {
+        // 1. Criar um Usuário
 
-        if($user = User::query()
-            ->where('email', '=', $this->email)
-            ->first()) {
+        $user = User::query()->create($this->validated());
 
-            if (Hash::check($this->password, $user->password)) {
 
-                auth()->login($user);
 
-                return true;
-            }
-        }
-        return false;
+
+        // 2. Logar com esse Usuário
+
+        auth()->login($user);
+
+        return true;
     }
 
 
