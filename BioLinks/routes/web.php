@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\LinkController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LogoutControler;
@@ -18,9 +19,15 @@ Route::middleware('guest')->group(function () {
 
 });
 
-Route::get('/logout', LogoutControler::class)->middleware('auth')->name('logout');
 
+Route::middleware('auth')->group(function () {
 
-Route::get('/dashboard', fn() => 'dashboard :: '. auth()->id())
-    ->middleware('auth')
-    ->name('dashboard');
+    Route::get('/logout', LogoutControler::class)->name('logout');
+
+    Route::get('/dashboard', fn() => 'dashboard :: '. auth()->id())
+        ->name('dashboard');
+
+    Route::get('/links/create', [LinkController::class, 'create'])->name('links.create');
+    Route::post('/links/create', [LinkController::class, 'store']);
+});
+
