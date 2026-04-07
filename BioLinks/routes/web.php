@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LogoutControler;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfilleController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -36,5 +37,8 @@ Route::middleware('auth')->group(function () {
 
     Route::patch('/links/{link}/up', [LinkController::class, 'up'])->name('links.up');
     Route::patch('/links/{link}/down', [LinkController::class, 'down'])->name('links.down');
+
+    Route::get('/profile', [ProfilleController::class, 'index'])->name('profile');
+    Route::put('/profile', [ProfilleController::class, 'update'])->name('profile.update');
 });
 

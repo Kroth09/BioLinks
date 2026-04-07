@@ -4,18 +4,15 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Gate;
 
-class UpdateLinkRequest extends FormRequest
+class ProfileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        $inspect = Gate::inspect('atualizar', $this->link);
-
-        return $inspect->allowed();
+        return true;
     }
 
     /**
@@ -26,8 +23,9 @@ class UpdateLinkRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'link' => ['required', 'url',],
-            'name' => ['required', 'min:3'],
+            'name' => ['required', 'min:3','max:50',],
+            'description' => ['nullable'],
+            'handler' => ['required', 'unique:users,handler'. $this->user()->id],
         ];
     }
 }
