@@ -27,9 +27,12 @@ class LinkController extends Controller
         /** @var User $user */
         $user = auth()->user();
 
-        $user->links()
-            ->create($request->validated());
+        $lastSort = $user->links()->max('sort') ?? 0;
 
+        $user->links()
+            ->create([ ...$request->validated(), 'sort' => $lastSort + 1]);
+
+        return to_route('dashboard');
     }
 
 
@@ -57,6 +60,52 @@ class LinkController extends Controller
      */
     public function destroy(Link $link)
     {
-        //
+        $link->delete();
+        return to_route('dashboard', 'Deletado com sucesso!');
     }
+
+    public function up(Link $link){
+        $order = $link->sort;
+        $newOrder = $order - 1;
+
+        /** @var User $user */
+        $user = auth()->user();
+
+        $swapWith = $user->links()
+            ->where('sort', '=', $newOrder)
+            ->first();
+
+        if (!$swapWith) {
+            return back();
+        }
+
+        $link->fill(['sort' => $newOrder])->save();
+        $swapWith->fill(['sort' => $order])->save();
+
+        return back();
+
+    }
+
+    public function down(Link $link){
+
+        $order = $link->sort;
+        $newOrder = $order + 1;
+
+        /** @var User $user */
+        $user = auth()->user();
+
+        $swapWith = $user->links()
+            ->where('sort', '=', $newOrder)
+            ->first();
+
+        if (!$swapWith) {
+            return back();
+        }
+
+        $link->fill(['sort' => $newOrder])->save();
+        $swapWith->fill(['sort' => $order])->save();
+
+        return back();
+    }
+
 }
