@@ -5,13 +5,17 @@
         @if($message = session()->get('message'))
             <div>{{ $message }}</div>
         @endif
-    
+
 
     <ul>
         @foreach( $links as $link )
 
             <li>
                 <a href="{{ route('links.edit', $link ) }}">{{ $link->name }}</a>
+
+                <form>
+
+                </form>
             </li>
 
         @endforeach
