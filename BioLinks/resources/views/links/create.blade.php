@@ -1,39 +1,24 @@
-<div>
+<x-layout.app>
 
-{{-- {{auth()->id()}} --}}
+    <x-container>
 
-<h1>Criar um Link</h1>
+        <x-card title="Add links">
 
+            <x-flashmessage/>
+            <x-form :route="route('links.create')" method="post" id="linkscreate">
 
-@if( $message = session()->get('message'))
-    <div>{{ $message }}</div>
-@endif
+                <x-input name="link" placeholder="Your Link" value="{{old('link')}}"/>
 
+                <x-input name="name" placeholder="Name" value="{{old('name')}}"/>
 
-<form action="{{ route('links.create') }}" method="post">
-    @csrf
+            </x-form>
 
+            <x-slot:actions>
+                <x-a href="{{ route('dashboard') }}">Cancel</x-a>
+                <x-button type="submit" form="linkscreate">Save</x-button>
+            </x-slot:actions>
 
-    <div>
-        <input name="link" placeholder="Link" value="{{old('link')}}"/>
-        @error('link')
-        <span>{{ $message }}</span>
-        @enderror
-    </div>
+        </x-card>
+    </x-container>
 
-    <br>
-
-    <div>
-        <input name="name" placeholder="Name" value="{{old('name')}}"/>
-        @error('name')
-        <span>{{ $message }}</span>
-        @enderror
-    </div>
-
-    <br>
-            <a href="{{ route('dashboard') }}">Cancelar</a>
-            <button>Salvar</button>
-
-
-</form>
-</div>
+</x-layout.app>

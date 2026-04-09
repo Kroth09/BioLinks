@@ -33,7 +33,7 @@ class Link extends Model
         $user = $this->user;
 
         $swapWith = $user->links()
-            ->where('sort', '=', $newOrder)
+            ->where('sort', $newOrder)
             ->first();
 
         if (!$swapWith) {

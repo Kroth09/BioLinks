@@ -1,54 +1,65 @@
-<div>
-    <h1>Dashboard</h1>
-    <h2>User {{ auth()->user()->name }} :: {{ auth()->id() }}</h2>
+<x-layout.app>
 
-    <a href="{{ route('profile') }}">Atualizar Perfil</a>
+    <x-container>
+        <div class="text-center space-y-4">
+            <x-img src="/storage/{{ $user->photo }}" alt="Profile Picture"/>
+            <div class="font-bold text-2xl tracking-wide">{{ $user->name }}</div>
+            <div class="font-sm italic opacity-80">{{ $user->description }}</div>
 
+            <ul class="space-y-3 text-center flex flex-col justify-centers">
+                @foreach($links as $link)
+                    <li class="flex items-center gap-2">
 
-        @if($message = session()->get('message'))
-            <div>{{ $message }}</div>
-        @endif
+                        {{-- Botão descer --}}
+                        @unless($loop->last)
+                            <x-form :route="route('links.down', $link)" method="patch">
+                                <x-button ghost>
+                                    <x-icons.down class="w-6 h-6"/>
+                                </x-button>
+                            </x-form>
+                        @else
+                            <x-button disabled>
+                                <x-icons.down class="w-6 h-6"/>
+                            </x-button>
 
+                        @endunless
 
-    <a href="{{ route('links.create') }}"> Adicionar Link</a>
+                        {{-- Botão subir --}}
+                        @unless($loop->first)
+                            <x-form :route="route('links.up', $link)" method="patch">
+                                <x-button ghost>
+                                    <x-icons.up class="w-6 h-6"/>
+                                </x-button>
+                            </x-form>
+                        @else
+                            <x-button disabled>
+                                <x-icons.up class="w-6 h-6"/>
+                            </x-button>
+                        @endunless
 
-    <ul>
-        @foreach( $links as $link )
+                        {{-- Link editar --}}
+                        <x-button
+                            href="{{ route('links.edit', $link) }}"
+                            class=" text-amber-50 btn btn-soft btn-primary text-center w-full"
+                        >
+                            {{ $link->name }}
+                        </x-button>
 
-            <li style="display: flex">
+                        {{-- Botão deletar --}}
+                        <x-form
+                            :route="route('links.destroy', $link)"
+                            method="delete"
+                            onsubmit="return confirm('tem certeza?')"
+                        >
+                            <x-button ghost>
+                                <x-icons.trash class="w-6 h-6"/>
+                            </x-button>
+                        </x-form>
 
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    </x-container>
 
-
-                @if(!$loop->last)
-                <form action="{{ route('links.down', $link) }}" method="post">
-                    @csrf
-                    @method('PATCH')
-
-                    <button>⬇️</button>
-                </form>
-                @endif
-
-                @if(!$loop->first)
-                <form action="{{ route('links.up', $link) }}" method="post">
-                    @csrf
-                    @method('PATCH')
-
-                    <button>⬆️</button>
-                </form>
-                @endif
-
-                <a href="{{ route('links.edit', $link ) }}">
-                {{ $link->id }} . {{ $link->name }}
-                </a>
-
-                <form action="{{ route('links.destroy', $link) }}" method="post" onsubmit="return confirm('tem certeza?')">
-                    @csrf
-                    @method('DELETE')
-
-                    <button>Deletar</button>
-                </form>
-            </li>
-
-        @endforeach
-    </ul>
-</div>
+</x-layout.app>

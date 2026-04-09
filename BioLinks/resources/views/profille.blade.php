@@ -1,47 +1,22 @@
-<div>
+<x-layout.app>
+    <x-container>
+        <x-card title="Profile">
+            <x-form :route="route('profile.update')" method="put" id="form" enctype="multipart/form-data">
+                <div class="flex gap-2 items-center mb-7">
+                    <x-img src="/storage/{{ $user->photo }}" alt="Profile Picture"/>
+                    <x-file-input name="photo" />
+                </div>
 
-    <h1>Profile</h1>
+                <x-input  name="name" placeholder="Name" value="{{ old('name', $user->name) }}" />
+                <x-textarea name="description" value="{{ old('description', $user->description) }}" />
+                <x-input name="handler" prefix="biolinks.com.br/@" placeholder="Handler"
+                         value="{{ old('handler', $user->handler) }}" />
+            </x-form>
 
-    @if($message = session('message'))
-        <div>{{ $message }}</div>
-    @endif
-
-    <form action="{{ route('profile') }}" method="post">
-        @csrf
-        @method('PUT')
-
-        <div>
-            <input name="name" placeholder="Nome" value="{{old('name', $user->name)}}"/>
-            @error('name')
-            <span>{{ $message }}</span>
-            @enderror
-        </div>
-
-        <br>
-
-        <div>
-            <textarea name="description" placeholder="Breve resumo:">{{ old('description') }}</textarea>
-            @error('description')
-            <span>{{ $message }}</span>
-            @enderror
-        </div>
-
-        <br>
-
-
-        <div>
-            <span>biolinks.com.br/@</span>
-            <textarea
-            name="handler" placeholder="@seulink">{{old('handler', $user->handler)}}</textarea>
-            @error('handler')
-            <span>{{ $message }}</span>
-            @enderror
-        </div>
-
-        <a href="{{ route("dashboard") }}">Cancelar</a>
-
-        <button>Update</button>
-
-
-    </form>
-</div>
+            <x-slot:actions>
+                <x-a :href="route('dashboard')">Cancel</x-a>
+                <x-button form="form">Update link</x-button>
+            </x-slot:actions>
+        </x-card>
+    </x-container>
+</x-layout.app>

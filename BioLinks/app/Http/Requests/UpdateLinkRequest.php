@@ -13,9 +13,7 @@ class UpdateLinkRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $inspect = Gate::inspect('atualizar', $this->link);
-
-        return $inspect->allowed();
+        return true;
     }
 
     /**

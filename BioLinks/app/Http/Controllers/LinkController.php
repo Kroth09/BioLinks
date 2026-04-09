@@ -16,7 +16,7 @@ class LinkController extends Controller
      */
     public function create()
     {
-       return view('links.create');
+        return view('links.create');
     }
 
     /**
@@ -31,23 +31,13 @@ class LinkController extends Controller
         $lastSort = $user->links()->max('sort') ?? 0;
 
         $user->links()
-            ->create([ ...$request->validated(), 'sort' => $lastSort + 1]);
+            ->create([...$request->validated(), 'sort' => $lastSort + 1]);
 
         return to_route('dashboard');
     }
 
     public function edit(Link $link)
     {
-
-            /** @var User $user */
-        $user = auth()->user();
-
-        dump(
-
-            $user->can('update', $link)
-
-        );
-
         return view('links.edit', compact('link'));
     }
 
@@ -56,10 +46,8 @@ class LinkController extends Controller
      */
     public function update(UpdateLinkRequest $request, Link $link)
     {
-
-
-        return to_route('dashboard')
-            ->with('message','Atualizado com sucesso!');
+        $link->fill($request->validated())->save();
+        return to_route('dashboard')->with('message', 'Link atualizado com sucesso!');
     }
 
     /**
@@ -67,23 +55,20 @@ class LinkController extends Controller
      */
     public function destroy(Link $link)
     {
-
         $link->delete();
         return to_route('dashboard', 'Deletado com sucesso!');
     }
 
-    public function up(Link $link){
-
-       $link->moveUp();
-
+    public function up(Link $link)
+    {
+        $link->moveUp();
         return back();
-
     }
 
-    public function down(Link $link){
-
+    public function down(Link $link)
+    {
+//        dd($link->order);
         $link->moveDown();
-
         return back();
     }
 

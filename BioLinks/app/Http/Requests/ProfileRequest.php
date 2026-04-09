@@ -2,8 +2,16 @@
 
 namespace App\Http\Requests;
 
+use GuzzleHttp\Psr7\UploadedFile;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\CheckHandler;
+use Illuminate\Validation\Rule;
+
+    /**
+     * @property-read UploadedFile $photo
+     */
+
 
 class ProfileRequest extends FormRequest
 {
@@ -25,7 +33,8 @@ class ProfileRequest extends FormRequest
         return [
             'name' => ['required', 'min:3','max:50',],
             'description' => ['nullable'],
-            'handler' => ['required', 'unique:users,handler'. $this->user()->id],
+            'photo' => ['nullable','image',],
+            'handler' => ['required', Rule::unique('users')->ignoreModel($this->user()), new CheckHandler()],
         ];
     }
 }
