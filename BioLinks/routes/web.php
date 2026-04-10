@@ -7,10 +7,8 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LogoutControler;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfilleController;
-
-Route::get('/', function () {
-    return view('welcome');
-});
+use function Laravel\Folio\name;
+use App\Http\Controllers\BioLinkController;
 
 Route::middleware('guest')->group(function () {
 
@@ -27,7 +25,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/logout', LogoutControler::class)->name('logout');
 
-    Route::get('/dashboard', DashboardController::class)->name('dashboard');
+    Route::get('/', DashboardController::class)->name('dashboard');
 
     Route::get('/links/create', [LinkController::class, 'create'])->name('links.create');
     Route::post('/links/create', [LinkController::class, 'store']);
@@ -43,5 +41,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/profile', [ProfilleController::class, 'index'])->name('profile');
     Route::put('/profile', [ProfilleController::class, 'update'])->name('profile.update');
+
 });
+
+    Route::get('/{user:handler}', BioLinkController::class);
 

@@ -1,6 +1,11 @@
 <x-layout.app>
 
     <x-container>
+        <div class="absolute top-7 left-115">
+            <x-button  :href="route('profile')" ghost>Profile</x-button>
+            <br>
+            <x-button :href="route('links.create')" ghost>Add Links</x-button>
+        </div>
         <div class="text-center space-y-4">
             <x-img src="/storage/{{ $user->photo }}" alt="Profile Picture"/>
             <div class="font-bold text-2xl tracking-wide">{{ $user->name }}</div>
@@ -8,7 +13,7 @@
 
             <ul class="space-y-3 text-center flex flex-col justify-centers">
                 @foreach($links as $link)
-                    <li class="flex items-center gap-2">
+                    <li class="flex items-center gap-2 justify-center ">
 
                         {{-- Botão descer --}}
                         @unless($loop->last)
